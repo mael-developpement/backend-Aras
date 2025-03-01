@@ -12,32 +12,28 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
 model User {
   id        Int      @id @default(autoincrement())
-  picture   String?
-  gender    String?
-  age       Int
-  username  String
   email     String   @unique
+  firstname      String
+  lastname      String
   password  String
-  active    Boolean  @default(true) @db.TinyInt()
+  age      Int?
+  role Role[] @relation(name: "RoleUser")
+  panel Panel[] @relation(name: "PanelUser")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  roles     Role[]   @relation("UserRoles")
-  panelId   Int
-  panel     Panel    @relation(fields: [panelId], references: [id])
 }
-
 model Role {
-  id    Int    @id @default(autoincrement())
-  name  String
-  users User[] @relation("UserRoles")
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  users     User[]  @relation(name: "RoleUser")
 }
 
 model Panel {
-  id    Int    @id @default(autoincrement())
-  name  String
-  price Float
-  users User[]
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  price     Float
+  description String
+  users     User[]  @relation(name: "PanelUser")
 }
